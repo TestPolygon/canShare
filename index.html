@@ -22,12 +22,12 @@
         if ("canShare" in navigator) {
             const pngElem = document.querySelector("#result-png");
             const pdfElem = document.querySelector("#result-pdf");
+            
             const png = new File([new Uint8Array([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])], "qwe.png", {type: "image/png"});
             const pdf = new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "123.pdf", {type: "application/pdf"});
 
             pngElem.textContent = "canShare(png): " + navigator.canShare({files: [png]});
             pdfElem.textContent = "canShare(pdf): " + navigator.canShare({files: [pdf]});
-
         } else {
             const canShareElem = document.querySelector("#canShare");
             canShareElem.textContent = `The browser does not support "navigator.canShare"`;
@@ -35,8 +35,8 @@
     </script>
 </head>
 <body>
-<div id="canShare"></div>
-<div id="result-png"></div>
-<div id="result-pdf"></div>
+    <div id="canShare"></div>
+    <div id="result-png"></div>
+    <div id="result-pdf"></div>
 </body>
 </html>
