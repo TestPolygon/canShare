@@ -38,29 +38,37 @@
             const png = new File([new Uint8Array([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])], "qwe.png", {type: "image/png"});
             const pdf = new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "123.pdf", {type: "application/pdf"});
 
-            pngElem.textContent = "canShare(png): " + navigator.canShare({files: [png]});
-            pdfElem.textContent = "canShare(pdf): " + navigator.canShare({files: [pdf]});
-
-
+            const canSharePng = navigator.canShare({files: [png]});
+            const canSharePdf = navigator.canShare({files: [pdf]});
+            pngElem.textContent = "canShare(png): " + canSharePng;
+            pdfElem.textContent = "canShare(pdf): " + canSharePdf;
 
             const pngBtn = document.querySelector("#button-png");
-            const pdfBtn = document.querySelector("#button-pdf");
+            const pdfBtn = document.querySelector("#button-pdf");            
 
-            pngBtn.addEventListener("click", async event => {
-                try {
-                    await navigator.share({files: [png]});
-                } catch (error) {
-                    document.querySelector("#error").textContent = `${error.name}: "${error.message}"`;
-                }
-            });		
+            if (canSharePng) {
+                pngBtn.addEventListener("click", async event => {
+                    try {
+                        await navigator.share({files: [png]});
+                    } catch (error) {
+                        document.querySelector("#log").textContent = `${error.name}: "${error.message}"`;
+                    }
+                });
+            } else {
+                pngBtn.disabled = true;
+            }
 
-            pdfBtn.addEventListener("click", async event => {
-                try {
-                    await navigator.share({files: [pdf]});
-                } catch (error) {
-                    document.querySelector("#log").textContent = `${error.name}: "${error.message}"`;
-                }
-            });
+            if (canSharePdf) {
+                pdfBtn.addEventListener("click", async event => {
+                    try {
+                        await navigator.share({files: [pdf]});
+                    } catch (error) {
+                        document.querySelector("#log").textContent = `${error.name}: "${error.message}"`;
+                    }
+                });
+            } else {
+                pdfBtn.disabled = true;
+            }
 
         } else {
             const canShareElem = document.querySelector("#canShare");
