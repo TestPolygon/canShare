@@ -6,15 +6,27 @@
     <title>canShare test</title>
     
     <style>
-        html {
+        html, body {
             height: 100%;
+            margin: 0;
         }
         body {
-            height: 100%;
             display: flex;            
             flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+        hr {
+            min-width: 50%;
+        }
+        button {
+            min-width: 9em;
+            min-height: 3em;
+            margin: 1em 0;
+        }
+        .error {
+            color: #EE2200;
+            font-weight: bold;
         }
     </style>
 
@@ -28,15 +40,42 @@
 
             pngElem.textContent = "canShare(png): " + navigator.canShare({files: [png]});
             pdfElem.textContent = "canShare(pdf): " + navigator.canShare({files: [pdf]});
+
+
+
+            const pngBtn = document.querySelector("#button-png");
+            const pdfBtn = document.querySelector("#button-pdf");
+
+            pngBtn.addEventListener("click", async event => {
+                try {
+                    await navigator.share({files: [png]});
+                } catch (error) {
+                    document.querySelector("#error").textContent = `${error.name}: "${error.message}"`;
+                }
+            });		
+
+            pdfBtn.addEventListener("click", async event => {
+                try {
+                    await navigator.share({files: [pdf]});
+                } catch (error) {
+                    document.querySelector("#log").textContent = `${error.name}: "${error.message}"`;
+                }
+            });
+
         } else {
             const canShareElem = document.querySelector("#canShare");
             canShareElem.textContent = `The browser does not support "navigator.canShare"`;
+            document.querySelectorAll("button").forEach(btn => btn.disabled = true);
         }
     </script>
 </head>
 <body>
-    <div id="canShare"></div>
+    <div id="canShare" class="error"></div>
     <div id="result-png"></div>
     <div id="result-pdf"></div>
+    <hr>
+    <button id="button-png">Share PNG</button>
+    <button id="button-pdf">Share PDF</button>  
+	<div id="log" class="error"></div>
 </body>
 </html>
